@@ -5,4 +5,59 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <string-array name="states_list">
+        <item>ANDHRA PRADESH</item>
+        <item>BIHAR</item>
+        <item>DELHI</item>
+        <item>GUJARAT</item>
+        <item>HARYANA</item>
+        <item>KARNATAKA</item>
+        <item>MAHARASHTRA</item>
+        <item>TAMIL NADU</item>
+        <item>UTTAR PRADESH</item>
+    </string-array>
+
+    <string-array name="andhra">
+        <item>Hyderabad</item>
+    </string-array>
+
+    <string-array name="bihar">
+        <item>Patna</item>
+    </string-array>
+
+    <string-array name="delhi">
+        <item>D.C.E.</item>
+        <item>Shadipur</item>
+        <item>I.T.O.</item>
+        <item>Dilshad Garden</item>
+        <item>Dwarka</item>
+    </string-array>
+
+    <string-array name="gujarat">
+        <item>Ahmedabad</item>
+    </string-array>
+
+    <string-array name="haryana">
+        <item>Faridabad</item>
+    </string-array>
+
+    <string-array name="karnataka">
+        <item>Bangalore</item>
+    </string-array>
+
+    <string-array name="maharashtra">
+        <item>Mumbai</item>
+    </string-array>
+
+    <string-array name="tamil_nadu">
+        <item>Chennai</item>
+    </string-array>
+
+    <string-array name="uttar_pradesh">
+        <item>Agra</item>
+        <item>Lucknow</item>
+        <item>Kanpur</item>
+        <item>Varanasi</item>
+    </string-array>
+
 </resources>
