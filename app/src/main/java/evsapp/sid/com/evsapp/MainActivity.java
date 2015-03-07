@@ -20,6 +20,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import static android.widget.AdapterView.OnItemSelectedListener;
 
@@ -27,6 +28,7 @@ import static android.widget.AdapterView.OnItemSelectedListener;
 public class MainActivity extends ActionBarActivity implements OnItemSelectedListener {
 
     TextView display;
+    TextView temp;
     Spinner stateList,cityList;
     ArrayAdapter<CharSequence> mStateArrayAdapter=null,mCityArrayAdapter=null;
     ArrayList<String> cities = null;
@@ -75,19 +77,36 @@ public class MainActivity extends ActionBarActivity implements OnItemSelectedLis
         //mCityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mCityArrayAdapter.notifyDataSetChanged();
     }
-    private class ReadWebpageContents extends AsyncTask<String, Void, Void> {
+    private class ReadWebpageContents extends AsyncTask<String, Void, Document> {
         @Override
-        protected Void doInBackground(String... params) {
+        protected Document doInBackground(String... params) {
             try {
                 Document doc = Jsoup.connect(params[0]).get();
-                display.setText(doc.text());
+                //temp.setText(doc.title());
                 //printTableContent(doc);
                 //display.setText(doc.title());
-                //return doc;
+                return doc;
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Document document) {
+            super.onPostExecute(document);
+            temp.setText("Table\n");
+            Element table = document.getElementById("Td1").select("table").get(0); //selecting first table
+            Elements rows = table.select("tr");
+            for (int i = 1; i < rows.size(); i++) { //first row is the col names so skipping it.
+                Element row = rows.get(i);
+                Elements cols = row.select("td");
+                for(int j = 0; j< cols.size(); j++) {
+                    temp.append(cols.get(j).text()+" ");
+                }
+                temp.append("\n");
+
+            }
         }
 
         private void printTableContent(Document doc){
@@ -116,6 +135,7 @@ public class MainActivity extends ActionBarActivity implements OnItemSelectedLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         display = (TextView)findViewById(R.id.resultDisplay);
+        temp = (TextView)findViewById(R.id.page);
 
         cities = new ArrayList<>();
         delhi = new ArrayList<>(Arrays.asList("D.C.E.","Shadipur","I.T.O.","Dilshad Garden","Dwarka"));
@@ -147,6 +167,7 @@ public class MainActivity extends ActionBarActivity implements OnItemSelectedLis
         String base = "http://www.cpcb.gov.in/CAAQM/frmCurrentDataNew.aspx?StationName=";
         String website = "http://www.cpcb.gov.in/CAAQM/frmCurrentDataNew.aspx?StationName=D.C.E.&StateId=6&CityId=85";  //HOMEPAGE OF THE WEBSITE
         ReadWebpageContents mReadWebpageContents = new ReadWebpageContents();
+        mReadWebpageContents.execute(website);
         //try {
             //URL mUrl = new URL(website);
            //mReadWebpageContents.execute(website);
