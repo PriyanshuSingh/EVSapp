@@ -1,5 +1,6 @@
 package evsapp.sid.com.evsapp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -27,9 +29,11 @@ import static android.widget.AdapterView.OnItemSelectedListener;
 
 public class MainActivity extends ActionBarActivity implements OnItemSelectedListener {
 
+    public static final String STATE_AND_CITY = "1";
     TextView display;
     TextView temp;
     Spinner stateList,cityList;
+    Button getPollutionData = null;
     ArrayAdapter<CharSequence> mStateArrayAdapter=null,mCityArrayAdapter=null;
     ArrayList<String> cities = null;
     ArrayList<String> delhi = null;
@@ -45,11 +49,11 @@ public class MainActivity extends ActionBarActivity implements OnItemSelectedLis
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        display = (TextView)findViewById(R.id.resultDisplay);
+        //display = (TextView)findViewById(R.id.resultDisplay);
         switch(parent.getId()){
-            case R.id.states_list: display.setText("state selected");setCityList(position);break;
+            case R.id.states_list: /*display.setText("state selected");*/setCityList(position);break;
 
-            case R.id.city_list: display.setText("city selected");break;
+            case R.id.city_list: /*display.setText("city selected");*/break;
         }
 
     }
@@ -71,20 +75,19 @@ public class MainActivity extends ActionBarActivity implements OnItemSelectedLis
             case 5: cities.addAll(karnataka);break;
             case 6: cities.addAll(maharashtra);break;
             case 7: cities.addAll(tamil_nadu);break;
-            case 8: cities.addAll(uttar_pradesh);/*mCityArrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item,uttar_pradesh);*/break;
+            case 8: cities.addAll(uttar_pradesh);break;
         }
 
         //mCityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mCityArrayAdapter.notifyDataSetChanged();
     }
+
+    /*
     private class ReadWebpageContents extends AsyncTask<String, Void, Document> {
         @Override
         protected Document doInBackground(String... params) {
             try {
                 Document doc = Jsoup.connect(params[0]).get();
-                //temp.setText(doc.title());
-                //printTableContent(doc);
-                //display.setText(doc.title());
                 return doc;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -95,6 +98,7 @@ public class MainActivity extends ActionBarActivity implements OnItemSelectedLis
         @Override
         protected void onPostExecute(Document document) {
             super.onPostExecute(document);
+
             temp.setText("Table\n");
             Element table = document.getElementById("Td1").select("table").get(0); //selecting first table
             Elements rows = table.select("tr");
@@ -105,18 +109,18 @@ public class MainActivity extends ActionBarActivity implements OnItemSelectedLis
                     temp.append(cols.get(j).text()+" ");
                 }
                 temp.append("\n");
-
             }
+
         }
 
-        private void printTableContent(Document doc){
+        private void printTableContent(Document doc) {
             Element mTable = null;
             Elements mRows=null;
 
             //if((mTable=doc.getElementById("Td1"))==null)
             //    display.append("mtable null");
 
-            /*if((mRows = mTable.select("tr"))==null)
+            if((mRows = mTable.select("tr"))==null)
                 display.append("mrows null");
             for(int i=1; i < mRows.size(); i++){
                 Element mRow = mRows.get(i);
@@ -126,17 +130,11 @@ public class MainActivity extends ActionBarActivity implements OnItemSelectedLis
                      display.append(mCols.get(j).text()+"\t");
                 }
             }
-            */
+
         }
-    }
+    }*/
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        display = (TextView)findViewById(R.id.resultDisplay);
-        temp = (TextView)findViewById(R.id.page);
-
+    private void initialiseStates(){
         cities = new ArrayList<>();
         delhi = new ArrayList<>(Arrays.asList("D.C.E.","Shadipur","I.T.O.","Dilshad Garden","Dwarka"));
         uttar_pradesh = new ArrayList<>(Arrays.asList("Agra","Lucknow","Kanpur","Varanasi"));
@@ -147,39 +145,45 @@ public class MainActivity extends ActionBarActivity implements OnItemSelectedLis
         karnataka = new ArrayList<>(Arrays.asList("Bangalore"));
         maharashtra = new ArrayList<>(Arrays.asList("Mumbai"));
         tamil_nadu = new ArrayList<>(Arrays.asList("Chennai"));
+        cities.addAll(delhi);
+    }
 
+    private void initialiseDropDownMenus(){
         stateList = (Spinner)findViewById(R.id.states_list);
-
         cityList = (Spinner)findViewById(R.id.city_list);
         mStateArrayAdapter = ArrayAdapter.createFromResource(this,R.array.states_list,android.R.layout.simple_spinner_item);
         mStateArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         stateList.setAdapter(mStateArrayAdapter);
 
-        cities.addAll(delhi);
         mCityArrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item,cities);
-
-
         mCityArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         cityList.setAdapter(mCityArrayAdapter);
         stateList.setOnItemSelectedListener(this);
         cityList.setOnItemSelectedListener(this);
+    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        temp = (TextView)findViewById(R.id.page);
+        getPollutionData = (Button)findViewById(R.id.buttonGetData);
 
-        String base = "http://www.cpcb.gov.in/CAAQM/frmCurrentDataNew.aspx?StationName=";
-        String website = "http://www.cpcb.gov.in/CAAQM/frmCurrentDataNew.aspx?StationName=D.C.E.&StateId=6&CityId=85";  //HOMEPAGE OF THE WEBSITE
-        ReadWebpageContents mReadWebpageContents = new ReadWebpageContents();
-        mReadWebpageContents.execute(website);
-        //try {
-            //URL mUrl = new URL(website);
-           //mReadWebpageContents.execute(website);
-       /* } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }*/
+        initialiseStates();
+        initialiseDropDownMenus();
+
+        getPollutionData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] stateAndCity = new String[]{stateList.getSelectedItem().toString(),cityList.getSelectedItem().toString()};
+                Intent displayResult = new Intent(getApplicationContext(),DisplayResult.class);
+                displayResult.putExtra(STATE_AND_CITY, stateAndCity);
+                startActivity(displayResult);
+            }
+        });
 
 
-        //display.setText(doc.toString());
-        //Elements scriptTag = doc.getElementsByTag("script");
-        //display.setText((CharSequence) scriptTag);
-        //display.setText(doc.html());
+        //String base = "http://www.cpcb.gov.in/CAAQM/frmCurrentDataNew.aspx?StationName=";
+
 
     }
 
