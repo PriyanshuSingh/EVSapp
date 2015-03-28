@@ -5,4 +5,21 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <android.support.v7.widget.Toolbar style="@style/Toolbar.Fosdem" android:id="@+id/toolbar" android:layout_height="?attr/actionBarSize" android:layout_width="match_parent" />
+
+    <style name="Toolbar.evs" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+
+    <style name="ProgressBar.evs" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:indeterminateDrawable">
+            @drawable/fosdem_progress_indeterminate_horizontal_holo_light
+        </item>
+        <item name="android:progressDrawable">@drawable/fosdem_progress_horizontal_holo_light</item>
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+    </style>
+
 </resources>
