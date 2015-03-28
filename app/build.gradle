@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "evsapp.sid.com.evsapp"
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -23,4 +23,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile files('libs/jsoup-1.8.1.jar')
+    compile 'br.com.liveo:navigationdrawer-material:1.0.4'
 }

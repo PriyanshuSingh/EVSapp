@@ -1,7 +1,13 @@
 package evsapp.sid.com.evsapp;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +16,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -27,8 +35,11 @@ import java.util.Iterator;
 import static android.widget.AdapterView.OnItemSelectedListener;
 
 
-public class MainActivity extends ActionBarActivity implements OnItemSelectedListener {
+public class MainActivity extends ActionBarActivity implements ListView.OnItemClickListener {
 
+    private static final String STATE_CURRENT_SECTION = "current_section";
+    private Section currentSection;
+    private ProgressBar progressBar;
     public static final String STATE_AND_CITY = "1";
     TextView display;
     TextView temp;
@@ -46,6 +57,21 @@ public class MainActivity extends ActionBarActivity implements OnItemSelectedLis
     ArrayList<String> maharashtra = null;
     ArrayList<String> tamil_nadu = null;
 
+    private final View.OnClickListener menuFooterClickListener = new View.OnClickListener() {
+        @Override
+        public void OnClick(View view){
+            switch (view.getId()){
+                case R.id.action_settings:
+                    startActivity(new Intent(MainActivity.this,SettingsActivity.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.partial_zoom_out);
+                    break;
+                case  R.id.about;
+                    new AboutDialogFragment().show(getSupportFragmentManager(), "about");
+
+
+            }
+        }
+    };
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -208,5 +234,23 @@ public class MainActivity extends ActionBarActivity implements OnItemSelectedLis
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+
+    private static class AboutDialogFragment extends DialogFragment{
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState){
+            Context context = getActivity();
+            String title;
+            title = getString(R.string.app_name);
+
+            return AlertDialog.Builder(context).setTitle(title).setIcon
+        }
     }
 }
